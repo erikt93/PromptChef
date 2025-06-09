@@ -1,0 +1,151 @@
+# --- Importaciones  ---
+from google import genai
+from google.genai import types
+from PIL import Image
+from io import BytesIO
+
+# --- Configuración del Cliente ---
+client = genai.Client(api_key="PONER API") # <--- Pega tu API Key aquí
+
+# --- Función para generar receta A PARTIR DE INGREDIENTES ---
+def generar_receta_por_ingredientes(ingredientes: str, preferencias: str = "", dificultad: str = "intermedia") -> tuple[str, str]:
+    prompt = f"""
+    Sos un chef profesional especializado en recetas caseras y saludables.
+    Con los siguientes ingredientes:
+    {ingredientes}
+    Generá una receta que sea {preferencias if preferencias else "sin restricciones dietarias"},
+    de dificultad {dificultad}, pensada para una comida rica y práctica.
+    Escribí un título, una breve descripción, los ingredientes detallados y los pasos de preparación. Usá un lenguaje claro y simple.
+    """
+    try:
+        respuesta = client.models.generate_content(
+            model="gemini-1.5-flash",
+            contents=prompt
+        )
+        receta = respuesta.text
+        titulo = receta.strip().split('\n')[0]
+        return receta, titulo
+    except Exception as e:
+        print(f"Error al generar la receta por ingredientes: {e}")
+        return "No se pudo generar la receta por ingredientes.", "Error"
+
+
+# --- Función para generar receta A PARTIR DE UN NOMBRE DE PLATO ---
+def generar_receta_por_plato(nombre_plato: str, preferencias: str = "", dificultad: str = "intermedia") -> tuple[str, str]:
+    prompt = f"""
+    Eres un chef profesional especializado en crear recetas detalladas y caseras.
+    Dado el nombre del plato: "{nombre_plato}".
+    Por favor, genera una receta completa que incluya:
+    1. Un título claro y atractivo para el plato.
+    2. Una breve descripción del plato.
+    3. Una lista detallada de **todos los ingredientes necesarios**, con cantidades precisas.
+    4. Los pasos de preparación numerados, claros y fáciles de seguir.
+    Considera las siguientes especificaciones:
+    - Preferencias dietéticas: {preferencias if preferencias else "ninguna"}
+    - Dificultad de la receta: {dificultad}
+    - Usa un lenguaje claro y conciso, como si fuera para un libro de cocina.
+    """
+    try:
+        respuesta = client.models.generate_content(
+            model="gemini-1.5-flash",
+            contents=prompt
+        )
+        receta = respuesta.text
+        titulo = receta.strip().split('\n')[0]
+        return receta, titulo
+    except Exception as e:
+        print(f"Error al generar la receta para '{nombre_plato}': {e}")
+        return "No se pudo generar la receta para el plato.", "Error"
+
+
+# --- Función para generar imagen a partir del título de la receta ---
+def generar_imagen_desde_titulo(titulo_receta: str):
+    prompt_imagen = (
+        f"Create a high-quality 3D-rendered image of a delicious homemade dish titled '{titulo_receta}'. "
+        "The image should look like professional editorial food photography: well-presented on a rustic table, "
+        "with soft natural lighting, shallow depth of field, and a clean, warm background. The dish should look fresh, realistic, and inviting."
+    )
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.0-flash-preview-image-generation",
+            contents=[prompt_imagen],
+            config=types.GenerateContentConfig(
+                response_modalities=['TEXT', 'IMAGE']
+            )
+        )
+        imagen_generada_y_guardada = False
+        for part in response.candidates[0].content.parts:
+            if part.text is not None:
+                print(f"📝 Descripción extra del modelo para la imagen:\n{part.text}")
+            elif part.inline_data is not None:
+                image_data = part.inline_data.data
+                image = Image.open(BytesIO(image_data))
+                file_name_clean = "".join(c for c in titulo_receta if c.isalnum() or c in (' ', '_', '-')).lower().replace(' ', '_')
+                final_file_name = f"promptchef_imagen_{file_name_clean}.png"
+                image.save(final_file_name)
+                print(f"🖼️ Imagen guardada como {final_file_name}")
+                image.show()
+                imagen_generada_y_guardada = True
+
+        if not imagen_generada_y_guardada:
+            print("No se pudo obtener la imagen. La respuesta no contiene datos de imagen esperados.")
+
+    except Exception as e:
+        print(f"Error al generar la imagen: {e}")
+
+
+# --- Ejecución principal ---
+if __name__ == "__main__":
+    # --- Configuración de Entrada ---
+    # Para elegir el modo, simplemente asigna un valor a uno y deja el otro como "" (cadena vacía)
+
+    # EJEMPLO 1: Generar por INGREDIENTES
+    # ingredientes_para_receta = "papa, morrón, huevo, queso, carne"
+    # plato_deseado_para_receta = ""
+
+    # EJEMPLO 2: Generar por NOMBRE DE PLATO
+    # ingredientes_para_receta = ""
+    # plato_deseado_para_receta = " Lasagna de Carne"
+
+    
+    # AQUI SELECCIONAS LO QUE TIENES EN LA HELADERA O LO QUE QUIERAS COMER
+    ingredientes_para_receta = "papa, huevo ,panceta, queso"
+    plato_deseado_para_receta = ""
+
+    # Configuración de preferencias y dificultad (se aplica a ambos escenarios)
+    preferencias_receta = "" # Ejemplo: "sin gluten", "vegetariana"
+    dificultad_receta = "intermedio" # Ejemplo: "fácil", "intermedia", "avanzada"
+
+
+    # --- Lógica de Generación Automática ---
+    receta_generada = ""
+    titulo_receta = ""
+    tipo_de_generacion = ""
+
+    if plato_deseado_para_receta:
+        print(f"🧑‍🍳 Generando receta para: '{plato_deseado_para_receta}'...")
+        receta_generada, titulo_receta = generar_receta_por_plato(
+            plato_deseado_para_receta, preferencias_receta, dificultad_receta
+        )
+        tipo_de_generacion = "por nombre de plato"
+    elif ingredientes_para_receta:
+        print("🧑‍🍳 Generando receta a partir de ingredientes...")
+        receta_generada, titulo_receta = generar_receta_por_ingredientes(
+            ingredientes_para_receta, preferencias_receta, dificultad_receta
+        )
+        tipo_de_generacion = "por ingredientes"
+    else:
+        print("🤔 Por favor, especifica ingredientes o un nombre de plato para generar una receta.")
+
+    # --- Procesamiento de la Receta y Generación de Imagen (si la receta fue generada) ---
+    if tipo_de_generacion: # Solo si se intentó generar una receta
+        if "Error" not in titulo_receta:
+            print(f"\n📄 RECETA GENERADA ({tipo_de_generacion}):\n")
+            print(receta_generada)
+
+            print("\n🖼️ Generando imagen del plato...\n")
+            generar_imagen_desde_titulo(titulo_receta)
+        else:
+            print(f"❌ No se pudo proceder con la generación de la imagen debido a un error en la receta ({tipo_de_generacion}).")
+
+    print("\n--- Fin de la generación de recetas ---")
