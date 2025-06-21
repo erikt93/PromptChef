@@ -60,7 +60,7 @@ Esto permite usar la herramienta tanto para improvisar con lo que hay en casa, c
 
 ---
 
-## 🧩 Implementación
+## Implementación
 
 A continuación se presenta el código completo de PromptChef, implementado en una notebook Jupyter:
 
