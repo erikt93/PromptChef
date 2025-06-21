@@ -315,10 +315,9 @@ if __name__ == "__main__":
 
 --- Fin de la generación de recetas ---
 
-![Imagen de receta generada](promptchef_imagen_lasaña.png)
 
 ```
-
+![Imagen de receta generada](promptchef_imagen_lasaña.png)
 
 ## Justificación de viabilidad
 
