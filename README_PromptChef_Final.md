@@ -24,7 +24,7 @@ Ahí entra **PromptChef**, tu chef personal impulsado por inteligencia artificia
 
 La dinámica es simple:  
 - Si tenés ingredientes sueltos, los ingresás junto con tus preferencias dietarias y dificultad deseada, y PromptChef te genera una receta completa.  
-- Y si tenés antojo de algo en particular (tipo “quiero lasagña”), también podés ingresar el nombre del plato y la IA te devuelve la receta completa, con ingredientes, pasos y hasta imagen generada.  
+- Y si tenés antojo de algo en particular (tipo “quiero lasaña”), también podés ingresar el nombre del plato y la IA te devuelve la receta completa, con ingredientes, pasos y hasta imagen generada.  
 - Incluso te sirve de base para armar tu lista de compras si no tenés todo lo que necesitás.
 
 El sistema genera recetas con título, descripción, ingredientes detallados y pasos claros, y además construye una imagen editorial realista del plato.
@@ -190,12 +190,12 @@ if __name__ == "__main__":
 
     # EJEMPLO 2: Generar por NOMBRE DE PLATO
     # ingredientes_para_receta = ""
-    # plato_deseado_para_receta = " Lasagna"
+    # plato_deseado_para_receta = " lasaña"
 
     
     # AQUI SELECCIONAS LO QUE TIENES EN LA HELADERA O LO QUE QUIERAS COMER
     ingredientes_para_receta = ""
-    plato_deseado_para_receta = "Lasagna"
+    plato_deseado_para_receta = "lasaña"
 
     # Configuración de preferencias y dificultad (se aplica a ambos escenarios)
     preferencias_receta = "" # Ejemplo: "sin gluten", "vegetariana"
@@ -248,7 +248,7 @@ if __name__ == "__main__":
 ### 📋 Ejemplo de salida generada
 
 ```
-🧑‍🍳 Generando receta para: 'lasagña'...
+🧑‍🍳 Generando receta para: 'lasaña'...
 
 📄 RECETA GENERADA (por nombre de plato):
 
@@ -334,7 +334,7 @@ El proyecto no requiere construir interfaces visuales ni backend: una simple not
 - Resolver el problema de “qué cocinar” con una solución simple y personalizada.
 - Reaprovechar ingredientes para evitar desperdicio.
 - Generar recetas caseras, sanas y adaptadas a cada persona.
-- Responder a antojos específicos: si querés cocinar algo puntual (ej: Lasagña), PromptChef te genera la receta desde el nombre.
+- Responder a antojos específicos: si querés cocinar algo puntual (ej: Lasaña), PromptChef te genera la receta desde el nombre.
 - Utilizar IA generativa como herramienta útil y accesible para la vida cotidiana.
 - Explorar capacidades de *fast prompting* en escenarios creativos.
 
@@ -405,7 +405,7 @@ No te juzga. No te hace bajar una app. No te tira links raros.
 Te tira una receta bien clara, y encima te la muestra como si fuera la tapa de una revista de cocina.
 
 ¿Querés saber qué cocinar con lo que tenés? PromptChef.  
-¿Querés pastel de papa y no sabés cómo arrancar? PromptChef.  
+¿Querés lasagña y no sabés cómo arrancar? PromptChef.  
 ¿Querés sentir que tenés un chef en casa sin pagarle sueldo? PromptChef.
 
 Lo mejor de todo es que esto fue 100% posible gracias a los conceptos aprendidos en el curso.  
