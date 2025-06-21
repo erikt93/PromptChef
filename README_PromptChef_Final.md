@@ -245,7 +245,7 @@ if __name__ == "__main__":
     print("\n--- Fin de la generación de recetas ---")
 ```
 
-### 📋 Ejemplo de salida generada
+### Ejemplo de salida generada
 
 ```
 🧑‍🍳 Generando receta para: 'lasaña'...
@@ -357,7 +357,7 @@ Se utilizaron técnicas de prompting como:
 
 ---
 
-## 🛠️ Herramientas y tecnologías
+## Herramientas y tecnologías
 
 - `Python 3` + `Jupyter Notebook`
 - `Gemini 1.5 Flash` para generación de texto
